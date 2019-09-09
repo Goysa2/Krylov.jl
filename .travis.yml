@@ -3,10 +3,12 @@ language: julia
 os:
   - osx
   - linux
+  - windows
 
 julia:
   - 1.0
   - 1.1
+  - 1.2
   - nightly
 
 matrix:
@@ -28,9 +30,5 @@ jobs:
         - julia --project=docs docs/make.jl
       after_success: skip
 
-script:
-  - if [[ -a .git/shallow ]]; then git fetch --unshallow; fi
-  - julia --check-bounds=yes -e 'using Pkg; Pkg.clone(pwd()); Pkg.build("Krylov"); Pkg.test("Krylov"; coverage=true)'
-
 after_success:
-  - julia -e 'using Pkg; cd(Pkg.dir("Krylov")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder()); Codecov.submit(process_folder())'
+  - julia -e 'using Pkg; Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder()); Codecov.submit(process_folder())'
